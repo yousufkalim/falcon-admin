@@ -96,13 +96,13 @@ export default function RestaurantList() {
         setCuisineList(cuisineTypeIs);
       }
     );
-  }, []);
+  }, [WebServiceManager, globalState.auth.authToken]);
 
-  const baseUrl = "https://restaurant.a-table.app/";
+  const baseUrl = `${process.env.REACT_APP_BASE_URL}/`;
 
   useEffect(() => {
     setRestaurantData([]);
-    fetch("https://restaurant.a-table.app/resturants/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/resturants/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -132,7 +132,7 @@ export default function RestaurantList() {
         setRestaurantData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [baseUrl, globalState.auth.authToken, updateData]);
 
   const GetAllAdress = async (e) => {
     var stateUpdate = state;

@@ -52,9 +52,10 @@ export default function OrderList() {
     setOrderData([]);
     var SendUrl = "";
     if (rest_id !== "error" && rest_id !== undefined) {
-      SendUrl = "https://restaurant.a-table.app/tables/restaurant/" + rest_id;
+      SendUrl =
+        `${process.env.REACT_APP_BASE_URL}/tables/restaurant/` + rest_id;
     } else {
-      SendUrl = "https://restaurant.a-table.app/orders/";
+      SendUrl = `${process.env.REACT_APP_BASE_URL}/orders/`;
     }
     fetch(SendUrl, {
       mathod: "GET",
@@ -85,7 +86,7 @@ export default function OrderList() {
         setOrderData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, rest_id, updateData]);
 
   const actionsList = {
     // deleteAction:handleDelete,

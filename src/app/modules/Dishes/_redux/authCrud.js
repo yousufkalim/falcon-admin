@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const baseUrl = process.env.BASE_URL;
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/`;
 
 export const LOGIN_URL = `${baseUrl}users/authenticate`;
 export const REGISTER_URL = "api/auth/register";
 export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
-
 export const ME_URL = `${baseUrl}/users/current/`;
 
 export function login(email, password) {

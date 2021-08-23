@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
+import Notifier from "../../../../utils/Notifier";
 
 /*
   INTL (i18n) docs:
@@ -80,22 +81,24 @@ function Login(props) {
           },
           (responseLogin) => {
             //debugger;
-            console.log("in callback", responseLogin);
+            disableLoading();
+
             if (responseLogin.status === 200) {
               if (responseLogin.user.role === "admin") {
                 disableLoading();
                 setSubmitting(false);
                 localStorage.setItem("usertest", responseLogin.user);
                 props.login(responseLogin.user);
+                Notifier(responseLogin.message, "success");
               } else {
                 disableLoading();
                 setSubmitting(false);
-                setStatus("Only Admin member allowed to login");
+                Notifier("Only Admin member allowed to login", "error");
               }
             } else {
               disableLoading();
               setSubmitting(false);
-              setStatus(responseLogin.message);
+              Notifier(responseLogin.message, "error");
             }
           }
         );

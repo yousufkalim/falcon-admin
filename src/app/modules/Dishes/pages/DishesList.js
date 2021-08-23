@@ -19,7 +19,7 @@ import WebServicesManager from "../../../../WebServiceManager/WebServicesManager
 import moment from "moment";
 import { specificationsSlice } from "app/modules/ECommerce/_redux/specifications/specificationsSlice.js";
 
-const baseUrl = "https://restaurant.a-table.app/";
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/`;
 
 export default function DishesList() {
   //  reffeance for input field
@@ -154,7 +154,13 @@ export default function DishesList() {
         SetSpecialItemList(specialItemTypeis);
       }
     );
-  }, [updateList]);
+  }, [
+    WebServiceManager,
+    globalState.auth.authToken,
+    menu_id,
+    state,
+    updateList,
+  ]);
 
   function convertStringToList(elm) {
     if (elm !== undefined) {
@@ -182,9 +188,9 @@ export default function DishesList() {
     setRestaurantData([]);
     var SendUrl = "";
     if (menu_id !== "error" && menu_id !== undefined) {
-      SendUrl = "https://restaurant.a-table.app/dishs/restaurant/" + menu_id;
+      SendUrl = `${process.env.REACT_APP_BASE_URL}/dishs/restaurant/` + menu_id;
     } else {
-      SendUrl = "https://restaurant.a-table.app/dishs/";
+      SendUrl = `${process.env.REACT_APP_BASE_URL}/dishs/`;
     }
     fetch(SendUrl, {
       mathod: "GET",
@@ -225,7 +231,7 @@ export default function DishesList() {
         setRestaurantData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, menu_id, updateData]);
 
   // handle button disable function
   const handleBtnDisables = (price) => {
@@ -309,7 +315,7 @@ export default function DishesList() {
     form.append("tags", yourChips);
     form.append("dish_type", state.dish_type);
     form.append("special_item", state.special_item_id);
-    form.append("resturant_id", resturant_id);
+    // form.append("resturant_id", resturant_id);
     if (imageFile !== null) {
       form.append("dish_images", imageFile, imageFile.name);
     }
@@ -625,6 +631,7 @@ export default function DishesList() {
               <img
                 onClick={handleClick}
                 src={showImage}
+                alt="img"
                 style={{
                   width: "200px",
                   objectFit: "fill",

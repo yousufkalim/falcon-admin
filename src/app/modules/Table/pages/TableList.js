@@ -77,7 +77,7 @@ export default function DishesList() {
       updateState.resturant_id = rest_id;
       setState(updateState);
     }
-  }, []);
+  }, [WebServiceManager, globalState.auth.authToken, rest_id, state]);
 
   // populate data on load and on list change
 
@@ -85,9 +85,10 @@ export default function DishesList() {
     setTableData([]);
     var SendUrl = "";
     if (rest_id !== "error" && rest_id !== undefined) {
-      SendUrl = "https://restaurant.a-table.app/tables/restaurant/" + rest_id;
+      SendUrl =
+        `${process.env.REACT_APP_BASE_URL}/tables/restaurant/` + rest_id;
     } else {
-      SendUrl = "https://restaurant.a-table.app/tables/";
+      SendUrl = `${process.env.REACT_APP_BASE_URL}/tables/`;
     }
     fetch(SendUrl, {
       mathod: "GET",
@@ -113,7 +114,7 @@ export default function DishesList() {
         setTableData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, rest_id, updateData]);
 
   // handle button disable function
   const handleBtnDisables = () => {
@@ -522,7 +523,11 @@ export default function DishesList() {
                     style={{ width: 256 }}
                     value={JSON.stringify(qrInfo)}
                 /> */}
-                <img src={`${process.env.REACT_APP_BASE_URL}${qrValue}`} class="img-responsive" alt="qr-code" />
+                <img
+                  src={`${process.env.REACT_APP_BASE_URL}${qrValue}`}
+                  class="img-responsive"
+                  alt="qr-code"
+                />
               </Row>
             </>
           ) : (

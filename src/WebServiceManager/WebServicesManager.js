@@ -1,10 +1,9 @@
 import React from "react";
 import Utilities from "../Utilities/Utilities";
-
 export default class WebServicesManager extends React.Component {
-  baseUrl = "https://restaurant.a-table.app/";
+  baseUrl = `${process.env.REACT_APP_BASE_URL}/`;
   // baseUrl = "http://160.153.249.64:8082/";
-  // baseUrl = "https://restaurant.a-table.app/";
+  // baseUrl = "${process.env.REACT_APP_BASE_URL}/";
 
   //Post method
 

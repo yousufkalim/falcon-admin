@@ -22,6 +22,10 @@ export default function UserList() {
     infoId: "",
     // first Name
     firstName: "",
+    // phone
+    phone:"",
+    phoneError: "",
+
     firstNameError: "",
     // last Name
     lastName: "",
@@ -64,7 +68,7 @@ export default function UserList() {
 
   useEffect(() => {
     setUserData([]);
-    fetch("https://restaurant.a-table.app/users/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/users/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -90,7 +94,7 @@ export default function UserList() {
         setUserData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, updateData]);
 
   // handle button disable function
   const handleBtnDisables = () => {
@@ -99,10 +103,12 @@ export default function UserList() {
       firstName,
       lastName,
       email,
+      phone,
       password,
       emailError,
       passwordError,
       firstNameError,
+      phoneError,
       lastNameError,
     } = state;
     var stateUpdate = state;
@@ -114,6 +120,7 @@ export default function UserList() {
     ) {
       if (
         firstNameError === "" &&
+        phoneError ===""&&
         lastNameError === "" &&
         emailError === "" &&
         passwordError === ""
@@ -133,7 +140,10 @@ export default function UserList() {
       infoId: "",
       // first Name
       firstName: "",
+      //phone
+      phone:"",
       firstNameError: "",
+      phoneError:"",
       // last Name
       lastName: "",
       lastNameError: "",
@@ -186,12 +196,13 @@ export default function UserList() {
 
   // handle add new record
   const handleAdd = () => {
-    const { firstName, lastName, email, password } = state;
+    const { firstName, lastName, email, password,phone } = state;
     var info = {
       firstName,
       lastName,
       email: email.toLocaleLowerCase(),
       password,
+      phone,
     };
     WebServiceManager.postApiCall(
       {
@@ -223,6 +234,8 @@ export default function UserList() {
       (statusCode, responseUser) => {
         stateUpdate.firstName = responseUser.firstName;
         stateUpdate.lastName = responseUser.lastName;
+        stateUpdate.phone = responseUser.phone;
+
         stateUpdate.email = responseUser.email;
         stateUpdate.password = responseUser.password;
         stateUpdate.infoId = id;
@@ -236,7 +249,7 @@ export default function UserList() {
 
   // handle Edit submit (update call.)
   const handleUpdate = (id) => {
-    const { firstName, lastName, email, password, infoId, oldPass } = state;
+    const { firstName, lastName, email, password, infoId, oldPass,phone } = state;
     var info;
     if (oldPass !== "") {
       info = {
@@ -244,12 +257,14 @@ export default function UserList() {
         lastName,
         email,
         password,
+        phone
       };
     } else {
       info = {
         firstName,
         lastName,
         email,
+        phone
       };
     }
     //debugger;
@@ -378,6 +393,20 @@ export default function UserList() {
               />
             </Col>
             <Col md={6}>
+            <TextField
+                id="outlined-zip"
+                label="Phone"
+                type="number"
+                value={state.phone}
+                name="phone"
+                helperText={state.phoneError}
+
+                onChange={handleChange}
+                margin="normal"
+                variant="outlined"
+              />
+            </Col>
+            <Col md={6}>
               <TextField
                 id="outlined-password"
                 label="Password"
@@ -461,6 +490,18 @@ export default function UserList() {
                 onChange={(e) => handleEmailChange(e)}
                 margin="normal"
                 helperText={state.emailError}
+                variant="outlined"
+              />
+            </Col>
+            <Col md={6}>
+            <TextField
+                id="outlined-zip"
+                label="Phone"
+                type="number"
+                value={state.phone}
+                name="phone"
+                onChange={handleChange}
+                margin="normal"
                 variant="outlined"
               />
             </Col>

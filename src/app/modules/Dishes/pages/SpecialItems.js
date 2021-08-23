@@ -36,7 +36,7 @@ export default function SpecialItems() {
 
   useEffect(() => {
     setUserData([]);
-    fetch("https://restaurant.a-table.app/specialItems/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/specialItems/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -56,7 +56,7 @@ export default function SpecialItems() {
         setUserData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, updateData]);
 
   // handle button disable function
   const handleBtnDisables = () => {

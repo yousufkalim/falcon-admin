@@ -8,8 +8,9 @@ import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { Routes } from "../app/Routes";
 import { I18nProvider } from "../_metronic/i18n";
-import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
+import { Toaster } from "react-hot-toast";
 
+import { LayoutSplashScreen, MaterialThemeProvider } from "../_metronic/layout";
 export default function App({ store, persistor, basename }) {
   return (
     /* Provide Redux store */
@@ -21,6 +22,8 @@ export default function App({ store, persistor, basename }) {
           {/* Override `basename` (e.g: `homepage` in `package.json`) */}
           <BrowserRouter basename={basename}>
             {/*This library only returns the location that has been active before the recent location change in the current window lifetime.*/}
+            <Toaster />
+
             <MaterialThemeProvider>
               {/* Provide `react-intl` context synchronized with Redux state.  */}
               <I18nProvider>

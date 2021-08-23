@@ -41,7 +41,7 @@ export default function DishNameList() {
 
   useEffect(() => {
     setUserData([]);
-    fetch("https://restaurant.a-table.app/dishList/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/dishList/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -57,7 +57,7 @@ export default function DishNameList() {
         setUserData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, updateData]);
 
   // handle button disable function
   const handleBtnDisables = () => {

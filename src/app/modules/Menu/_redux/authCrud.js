@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "https://restaurant.a-table.app/";
+const baseUrl = `${process.env.REACT_APP_BASE_URL}/`;
 
 export const LOGIN_URL = `${baseUrl}users/authenticate`;
 export const REGISTER_URL = "api/auth/register";

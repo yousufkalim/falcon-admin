@@ -44,7 +44,7 @@ export default function CartList() {
 
   useEffect(() => {
     setOrderData([]);
-    fetch("https://restaurant.a-table.app/cart/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/cart/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -67,7 +67,7 @@ export default function CartList() {
         setOrderData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, updateData]);
 
   const actionsList = {
     // deleteAction:handleDelete,

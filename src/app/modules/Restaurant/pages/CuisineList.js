@@ -36,7 +36,7 @@ export default function CuisineList() {
 
   useEffect(() => {
     setUserData([]);
-    fetch("https://restaurant.a-table.app/cuisineType/", {
+    fetch(`${process.env.REACT_APP_BASE_URL}/cuisineType/`, {
       mathod: "GET",
       headers: {
         "content-type": "application/json",
@@ -56,7 +56,7 @@ export default function CuisineList() {
         setUserData(userDatais);
       })
       .catch((error) => console.log("error", error));
-  }, [updateData]);
+  }, [globalState.auth.authToken, updateData]);
 
   // handle button disable function
   const handleBtnDisables = () => {
