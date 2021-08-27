@@ -32,7 +32,7 @@ export function getUserByToken(token) {
   //   }
   // }
   // );
-  return localStorage.getItem("usertest");
+  return localStorage.getItem("token");
 }
 
 function APICall(method, url, params, callBack) {

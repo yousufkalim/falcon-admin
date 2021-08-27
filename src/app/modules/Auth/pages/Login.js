@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
 import Notifier from "../../../../utils/Notifier";
+import Axios from "axios";
 
 /*
   INTL (i18n) docs:
@@ -69,40 +70,33 @@ function Login(props) {
   const formik = useFormik({
     initialValues,
     validationSchema: LoginSchema,
-    onSubmit: (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       enableLoading();
-      setTimeout(() => {
-        login(
-          {
-            dataToSend: JSON.stringify({
-              email: values.email,
-              password: values.password,
-            }),
-          },
-          (responseLogin) => {
-            //debugger;
-            disableLoading();
-
-            if (responseLogin.status === 200) {
-              if (responseLogin.user.role === "admin") {
-                disableLoading();
-                setSubmitting(false);
-                localStorage.setItem("usertest", responseLogin.user);
-                props.login(responseLogin.user);
-                Notifier(responseLogin.message, "success");
-              } else {
-                disableLoading();
-                setSubmitting(false);
-                Notifier("Only Admin member allowed to login", "error");
-              }
-            } else {
-              disableLoading();
-              setSubmitting(false);
-              Notifier(responseLogin.message, "error");
-            }
-          }
+      try {
+        let response = await Axios.post(
+          `${process.env.REACT_APP_BASE_URL}/auth/login`,
+          values
         );
-      }, 1000);
+        const { user, token } = response.data.data;
+        disableLoading();
+        if (user.role === "Admin") {
+          setSubmitting(false);
+          // localStorage.setItem("usertest", user);
+          localStorage.setItem("token", token);
+
+          props.login(user);
+          Notifier(response.data.message, "success");
+        } else {
+          disableLoading();
+          setSubmitting(false);
+          Notifier("Only Admin member allowed to login", "error");
+        }
+      } catch (error) {
+        disableLoading();
+        if (error.response) {
+          Notifier(error.response.data.message, "error");
+        }
+      }
     },
   });
 
