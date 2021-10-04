@@ -77,20 +77,14 @@ function Login(props) {
           `${process.env.REACT_APP_BASE_URL}/auth/login`,
           values
         );
-        const { user, token } = response.data.data;
+        const { user, token } = response.data.result;
         disableLoading();
-        if (user.role === "Admin") {
-          setSubmitting(false);
-          // localStorage.setItem("usertest", user);
-          localStorage.setItem("token", token);
+        setSubmitting(false);
+        // localStorage.setItem("usertest", user);
+        localStorage.setItem("token", token);
 
-          props.login(user);
-          Notifier(response.data.message, "success");
-        } else {
-          disableLoading();
-          setSubmitting(false);
-          Notifier("Only Admin member allowed to login", "error");
-        }
+        props.login(user);
+        Notifier(response.data.message, "success");
       } catch (error) {
         disableLoading();
         if (error.response) {

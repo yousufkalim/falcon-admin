@@ -1,6 +1,6 @@
 import React from "react";
-import {CircularProgress} from "@material-ui/core";
-import {toAbsoluteUrl} from "../../_helpers";
+import { CircularProgress } from "@material-ui/core";
+import { toAbsoluteUrl } from "../../_helpers";
 
 export function SplashScreen() {
   return (
@@ -8,7 +8,7 @@ export function SplashScreen() {
       <div className="splash-screen">
         <img
           src={toAbsoluteUrl("/media/logos/logo-mini-md.png")}
-          alt="A Table logo"
+          alt="Falcon Consulting logo"
         />
         <CircularProgress className="splash-screen-spinner" />
       </div>

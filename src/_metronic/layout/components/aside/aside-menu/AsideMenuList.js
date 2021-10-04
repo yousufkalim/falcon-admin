@@ -33,31 +33,25 @@ export function AsideMenuList({ layoutProps }) {
         {/* users */}
 
         <li
-          className={`menu-item ${getMenuItemActive(
-            "/activeRestaurant",
-            false
-          )}`}
+          className={`menu-item ${getMenuItemActive("/blogs", false)}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/activeRestaurant">
+          <NavLink className="menu-link" to="/blogs">
             <span className="svg-icon menu-icon">
               <ContactsIcon />
             </span>
-            <span className="menu-text">Active Restaurants</span>
+            <span className="menu-text">Articles</span>
           </NavLink>
         </li>
         <li
-          className={`menu-item ${getMenuItemActive(
-            "/deactiveRestaurant",
-            false
-          )}`}
+          className={`menu-item ${getMenuItemActive("/projects", false)}`}
           aria-haspopup="true"
         >
-          <NavLink className="menu-link" to="/deactiveRestaurant">
+          <NavLink className="menu-link" to="/projects">
             <span className="svg-icon menu-icon">
               <ContactsIcon />
             </span>
-            <span className="menu-text">inActive Restaurants</span>
+            <span className="menu-text">Projects</span>
           </NavLink>
         </li>
         {/*  */}

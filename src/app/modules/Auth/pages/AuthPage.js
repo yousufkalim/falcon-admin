@@ -39,7 +39,7 @@ export function AuthPage() {
               {/* start:: Aside content */}
               <div className="flex-column-fluid d-flex flex-column justify-content-center">
                 <h3 className="font-size-h1 mb-5 text-white">
-                  Welcome to The Cafe Perks!
+                  Welcome to The Falcon Consulting!
                 </h3>
                 <p className="font-weight-lighter text-white opacity-80">
                   The ultimate Bootstrap & React 16 admin theme framework for
@@ -51,7 +51,7 @@ export function AuthPage() {
               {/* start:: Aside footer for desktop */}
               <div className="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
                 <div className="opacity-70 font-weight-bold	text-white">
-                  &copy; 2020 A Table
+                  &copy; 2020 Falcon
                 </div>
                 <div className="d-flex">
                   <Link to="/terms" className="text-white">
@@ -101,7 +101,7 @@ export function AuthPage() {
             {/* begin::Mobile footer */}
             <div className="d-flex d-lg-none flex-column-auto flex-column flex-sm-row justify-content-between align-items-center mt-5 p-5">
               <div className="text-dark-50 font-weight-bold order-2 order-sm-1 my-2">
-                &copy; 2020 A Table
+                &copy; 2020 Falcon
               </div>
               <div className="d-flex order-1 order-sm-2 my-2">
                 <Link to="/terms" className="text-dark-75 text-hover-primary">
