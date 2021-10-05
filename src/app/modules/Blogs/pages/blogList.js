@@ -38,25 +38,32 @@ export default function RestaurantList() {
     infoId: "",
     title: "",
     description: "",
+    sub_description: "",
     image: "",
+    featured: false,
   };
 
   const AddRestaurantSchema = Yup.object().shape({
     title: Yup.string().required("Required"),
     description: Yup.string().required("Required"),
+    sub_description: Yup.string().required("Required"),
+
     image: Yup.string().required("Required"),
   });
 
   const columns = [
     { title: "Image" },
     { title: "Title" },
+    {
+      title: "Sub Description",
+    },
     { title: "Description" },
-
     { title: "Date Of Created" },
     { title: "Actions" },
   ];
 
   const [showPasswordField, setShowPasswordField] = useState(false);
+
   const [oldPass, setOldPass] = useState("");
   // password view toogles state
   const [typeis, setTypeis] = useState("password");
@@ -137,13 +144,13 @@ export default function RestaurantList() {
                 ? `<img style="width:100px;height:100px" src="${baseUrl}${item.image}" alt="restaurant Image" />`
                 : `<img style="width:100px;height:100px" src="https://image.freepik.com/free-vector/no-data-concept-illustration_114360-626.jpg" alt="restaurant Image" />`,
               item.title,
-              item.description && item.description.length > 0 //Check for existence added as some data did not have description and it was throwing error
-                ? item.description
-                : "",
+              item.sub_description.substring(0, 200),
+              item.description.substring(0, 200),
               moment(item.createdAt).format("ddd MM YYYY HH:mm"),
               item._id,
             ]);
           });
+          console.log(userDatais, "userDatais");
           setRestaurantData(userDatais);
         }
       } catch (error) {
@@ -352,10 +359,13 @@ export default function RestaurantList() {
 
   // handle add new record
   const handleAdd = async (values) => {
-    const { title, description } = values;
+    const { title, description, featured, sub_description } = values;
     const form = new FormData();
     form.append("title", title);
+    form.append("sub_description", sub_description);
     form.append("description", description);
+
+    form.append("featured", featured);
 
     if (imageFile !== null) {
       form.append("image", imageFile, imageFile.name);
@@ -392,6 +402,11 @@ export default function RestaurantList() {
     if (responseUser) {
       edit_formik.setFieldValue("title", responseUser.title);
       edit_formik.setFieldValue("description", responseUser.description);
+      edit_formik.setFieldValue("featured", responseUser.featured);
+      edit_formik.setFieldValue(
+        "sub_description",
+        responseUser.sub_description
+      );
 
       edit_formik.setFieldValue("image", responseUser.image);
 
@@ -404,11 +419,14 @@ export default function RestaurantList() {
 
   // handle Edit submit (update call.)
   const handleUpdate = async (values) => {
-    const { title, description, infoId } = values;
+    const { title, description, infoId, featured, sub_description } = values;
     // //debugger;
     const formdata = new FormData();
     formdata.append("title", title);
     formdata.append("description", description);
+    formdata.append("featured", featured);
+    formdata.append("sub_description", sub_description);
+
     if (imageFile !== null) {
       formdata.append("image", imageFile, imageFile.name);
     }
@@ -538,7 +556,7 @@ export default function RestaurantList() {
     <>
       {restaurantData.length > 0 ? (
         <DataTableComponent
-          actionCol={4}
+          actionCol={5}
           columns={columns}
           data={restaurantData}
           actions={actionsList}
@@ -618,7 +636,27 @@ export default function RestaurantList() {
                   </div>
                 ) : null}
               </Col>
-
+              <Col md={12}>
+                <TextField
+                  id="outlined-desc"
+                  label="Description"
+                  value={formik.values.sub_description}
+                  name="sub_description"
+                  multiline
+                  rows={5}
+                  onChange={handleChange}
+                  margin="normal"
+                  variant="outlined"
+                />
+                {formik.touched.sub_description &&
+                formik.errors.sub_description ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">
+                      {formik.errors.sub_description}
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
               <Col md={12}>
                 <RichTextEditor
                   value={formik.values.description}
@@ -632,6 +670,22 @@ export default function RestaurantList() {
                     </div>
                   </div>
                 ) : null}
+              </Col>
+              <Col sm={12}>
+                <FormGroup row>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formik.values.featured}
+                        onChange={(e) =>
+                          formik.setFieldValue("featured", e.target.checked)
+                        }
+                        name="featured"
+                      />
+                    }
+                    label="Featured"
+                  />
+                </FormGroup>
               </Col>
             </Row>
             <div className="d-flex pt-4 mt-4 justify-content-end">
@@ -714,7 +768,27 @@ export default function RestaurantList() {
                   </div>
                 ) : null}
               </Col>
-
+              <Col md={12}>
+                <TextField
+                  id="outlined-desc"
+                  label="Description"
+                  value={edit_formik.values.sub_description}
+                  name="sub_description"
+                  multiline
+                  rows={5}
+                  onChange={handleEditChange}
+                  margin="normal"
+                  variant="outlined"
+                />
+                {edit_formik.touched.sub_description &&
+                edit_formik.errors.sub_description ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">
+                      {edit_formik.errors.sub_description}
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
               <Col md={12}>
                 <RichTextEditor
                   value={edit_formik.values.description}
@@ -729,6 +803,25 @@ export default function RestaurantList() {
                     </div>
                   </div>
                 ) : null}
+              </Col>
+              <Col sm={12}>
+                <FormGroup row>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={edit_formik.values.featured}
+                        onChange={(e) =>
+                          edit_formik.setFieldValue(
+                            "featured",
+                            e.target.checked
+                          )
+                        }
+                        name="featured"
+                      />
+                    }
+                    label="Featured"
+                  />
+                </FormGroup>
               </Col>
             </Row>
             <div className="d-flex pt-4 mt-4 justify-content-end">
