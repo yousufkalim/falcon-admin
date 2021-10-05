@@ -126,12 +126,9 @@ export default function RestaurantList() {
         let response = await Axios({
           method: "get",
           url: `${process.env.REACT_APP_BASE_URL}/blog`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         });
         var userDatais = [];
-        let data = response.data.user.Blogs;
+        let data = response.data.blogs;
         setdbData(data);
         if (data) {
           data.map((item) => {

@@ -124,12 +124,9 @@ export default function RestaurantList() {
         let response = await Axios({
           method: "get",
           url: `${process.env.REACT_APP_BASE_URL}/project`,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         });
         var userDatais = [];
-        let data = response.data.user.Projects;
+        let data = response.data.projects;
         setdbData(data);
         if (data) {
           data.map((item) => {
