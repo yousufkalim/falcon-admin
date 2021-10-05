@@ -3,8 +3,8 @@ import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../_metronic/layout";
 import { BuilderPage } from "./pages/BuilderPage";
 import UserPage from "./pages/UserPage";
-import ActiveRestaurantPage from "./pages/activeRestaurantPage";
-import DeactiveRestaurantPage from "./pages/deactiveRestaurantPage";
+import blogsListPage from "./pages/blogList";
+import projectsListPage from "./pages/projectsList";
 
 import TablePage from "./pages/TablePage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -32,14 +32,8 @@ export default function BasePage() {
         <ContentRoute path="/dashboard" component={DashboardPage} />
         <ContentRoute path="/builder" component={BuilderPage} />
         <ContentRoute path="/user" component={UserPage} />
-        <ContentRoute
-          path="/activeRestaurant"
-          component={ActiveRestaurantPage}
-        />
-        <ContentRoute
-          path="/deactiveRestaurant"
-          component={DeactiveRestaurantPage}
-        />
+        <ContentRoute path="/blogs" component={blogsListPage} />
+        <ContentRoute path="/projects" component={projectsListPage} />
 
         <ContentRoute path="/table/:rest_id" component={TablePage} />
         <ContentRoute path="/menu/:id" component={MenuPage} />

@@ -38,7 +38,7 @@ export default class DataTableComponent extends Component {
                   {/* {this.props.is_restaurant === true?
                 <a href={"/menu/"+cellData} ><Button variant="primary" style={{margin:10 }}>View Menu</Button></a>
                 :""} */}
-                  {this.props.is_menu || this.props.is_active === true ? (
+                  {/* {this.props.is_menu || this.props.is_active === true ? (
                     <>
                       <Button
                         variant="primary"
@@ -70,7 +70,7 @@ export default class DataTableComponent extends Component {
                         Activate
                       </Button>
                     </>
-                  )}
+                  )} */}
                   <span> </span>
                   <Button
                     variant="danger"
