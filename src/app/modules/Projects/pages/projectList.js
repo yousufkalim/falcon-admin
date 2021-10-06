@@ -25,6 +25,8 @@ import * as Yup from "yup";
 export default function RestaurantList() {
   //  reffeance for input field
   const hiddenFileInput = useRef(null);
+  const hiddenLogoInput = useRef(null);
+
   const [error, setError] = React.useState({});
   const [state, setState] = React.useState({
     infoId: "",
@@ -36,7 +38,9 @@ export default function RestaurantList() {
     infoId: "",
     title: "",
     description: "",
+    sub_description: "",
     image: "",
+    logo: "",
   };
 
   const AddRestaurantSchema = Yup.object().shape({
@@ -48,6 +52,10 @@ export default function RestaurantList() {
   const columns = [
     { title: "Image" },
     { title: "Title" },
+    { title: "Logo" },
+    {
+      title: "Sub Description",
+    },
     { title: "Description" },
 
     { title: "Date Of Created" },
@@ -69,7 +77,12 @@ export default function RestaurantList() {
   const [showImage, setShowImage] = useState(
     "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
   );
+  const [showLogo, setshowLogo] = useState(
+    "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
+  );
   const [imageFile, setImageFile] = useState(null);
+  const [logoFile, setlogoFile] = useState(null);
+
   const [imageError, setImageError] = useState("");
   // model toogler
   const [show, setShow] = useState(false);
@@ -135,8 +148,14 @@ export default function RestaurantList() {
                 ? `<img style="width:100px;height:100px" src="${baseUrl}${item.image}" alt="restaurant Image" />`
                 : `<img style="width:100px;height:100px" src="https://image.freepik.com/free-vector/no-data-concept-illustration_114360-626.jpg" alt="restaurant Image" />`,
               item.title,
+              item.logo !== undefined && item.logo !== ""
+                ? `<img style="width:100px;height:100px" src="${baseUrl}${item.logo}" alt="restaurant Image" />`
+                : `<img style="width:100px;height:100px" src="https://image.freepik.com/free-vector/no-data-concept-illustration_114360-626.jpg" alt="restaurant Image" />`,
+              item.sub_description && item.sub_description.length > 0 //Check for existence added as some data did not have sub_description and it was throwing error
+                ? item.sub_description.substring(0, 200)
+                : "",
               item.description && item.description.length > 0 //Check for existence added as some data did not have description and it was throwing error
-                ? item.description
+                ? item.description.substring(0, 200)
                 : "",
               moment(item.createdAt).format("ddd MM YYYY HH:mm"),
               item._id,
@@ -350,14 +369,19 @@ export default function RestaurantList() {
 
   // handle add new record
   const handleAdd = async (values) => {
-    const { title, description } = values;
+    const { title, description, sub_description } = values;
     const form = new FormData();
     form.append("title", title);
     form.append("description", description);
+    form.append("sub_description", sub_description);
 
     if (imageFile !== null) {
       form.append("image", imageFile, imageFile.name);
     }
+    if (logoFile !== null) {
+      form.append("logo", logoFile, logoFile.name);
+    }
+
     try {
       let token = localStorage.getItem("token");
       let response = await Axios({
@@ -372,6 +396,12 @@ export default function RestaurantList() {
       handleClose();
       formik.handleReset();
       setUpdateData(!updateData);
+      setShowImage(
+        "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
+      );
+      setshowLogo(
+        "https://getstamped.co.uk/wp-content/uploads/WebsiteAssets/Placeholder.jpg"
+      );
       Notifier(response.data.message, "success");
     } catch (error) {
       if (error.response) {
@@ -385,11 +415,17 @@ export default function RestaurantList() {
     if (responseUser) {
       edit_formik.setFieldValue("title", responseUser.title);
       edit_formik.setFieldValue("description", responseUser.description);
+      edit_formik.setFieldValue(
+        "sub_description",
+        responseUser.sub_description
+      );
 
       edit_formik.setFieldValue("image", responseUser.image);
+      edit_formik.setFieldValue("logo", responseUser.logo);
 
       edit_formik.setFieldValue("infoId", id);
       setShowImage(`${baseUrl}${responseUser.image}`);
+      setshowLogo(`${baseUrl}${responseUser.logo}`);
       setShowEdit(true);
       handleBtnDisables();
     }
@@ -397,13 +433,18 @@ export default function RestaurantList() {
 
   // handle Edit submit (update call.)
   const handleUpdate = async (values) => {
-    const { title, description, infoId } = values;
+    const { title, description, infoId, sub_description } = values;
     // //debugger;
     const formdata = new FormData();
     formdata.append("title", title);
     formdata.append("description", description);
+    formdata.append("sub_description", sub_description);
+
     if (imageFile !== null) {
       formdata.append("image", imageFile, imageFile.name);
+    }
+    if (logoFile !== null) {
+      formdata.append("logo", logoFile, logoFile.name);
     }
     try {
       let token = localStorage.getItem("token");
@@ -487,6 +528,9 @@ export default function RestaurantList() {
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
+  const handleLogoClick = (event) => {
+    hiddenLogoInput.current.click();
+  };
   // Call a function (passed as a prop from the parent component)
   // to handle the user-selected file
   const handleChangeImage = (event) => {
@@ -502,6 +546,21 @@ export default function RestaurantList() {
     reader.onload = function(e) {
       // console.log(reader.result);
       setShowImage(reader.result);
+    };
+  };
+  const handleChangeLogo = (event) => {
+    const fileUploaded = event.target.files[0];
+    formik.setFieldValue("logo", fileUploaded.name);
+
+    setlogoFile(fileUploaded);
+    // const Update = state;
+    // Update.restaurant_desc = state.restaurant_desc;
+    // setState(Update);
+    var reader = new FileReader();
+    reader.readAsDataURL(fileUploaded);
+    reader.onload = function(e) {
+      // console.log(reader.result);
+      setshowLogo(reader.result);
     };
   };
 
@@ -531,7 +590,7 @@ export default function RestaurantList() {
     <>
       {restaurantData.length > 0 ? (
         <DataTableComponent
-          actionCol={4}
+          actionCol={6}
           columns={columns}
           data={restaurantData}
           actions={actionsList}
@@ -592,7 +651,7 @@ export default function RestaurantList() {
                     color: "red",
                   }}
                 >
-                  **Click On Image to Upload New.**
+                  **Click On Image to Upload Image.**
                 </small>
               </Col>
               <Col md={12}>
@@ -611,7 +670,65 @@ export default function RestaurantList() {
                   </div>
                 ) : null}
               </Col>
-
+              <Col
+                sm={12}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <img
+                  onClick={handleLogoClick}
+                  src={showLogo}
+                  alt=""
+                  style={{
+                    width: "80px",
+                    objectFit: "fill",
+                    height: "60px",
+                    borderRadius: "15px",
+                  }}
+                />
+                <input
+                  type="file"
+                  ref={hiddenLogoInput}
+                  onChange={handleChangeLogo}
+                  style={{ display: "none" }}
+                />
+                {formik.touched.logo && formik.errors.logo ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">{formik.errors.logo}</div>
+                  </div>
+                ) : null}
+              </Col>
+              <Col sm={12}>
+                <small
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    color: "red",
+                  }}
+                >
+                  **Click On Image to Upload Logo.**
+                </small>
+              </Col>
+              <Col md={12}>
+                <TextField
+                  id="outlined-desc"
+                  label="Description"
+                  value={formik.values.sub_description}
+                  name="sub_description"
+                  multiline
+                  rows={5}
+                  onChange={handleChange}
+                  margin="normal"
+                  variant="outlined"
+                />
+                {formik.touched.sub_description &&
+                formik.errors.sub_description ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">
+                      {formik.errors.sub_description}
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
               <Col md={12}>
                 <RichTextEditor
                   value={formik.values.description}
@@ -689,6 +806,46 @@ export default function RestaurantList() {
                   **Click On Image to Upload New.**
                 </small>
               </Col>
+              <Col
+                sm={12}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <img
+                  onClick={handleLogoClick}
+                  src={showLogo}
+                  alt=""
+                  style={{
+                    width: "80px",
+                    objectFit: "fill",
+                    height: "60px",
+                    borderRadius: "15px",
+                  }}
+                />
+                <input
+                  type="file"
+                  ref={hiddenLogoInput}
+                  onChange={handleChangeLogo}
+                  style={{ display: "none" }}
+                />
+                {edit_formik.touched.logo && edit_formik.errors.logo ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">
+                      {edit_formik.errors.logo}
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
+              <Col sm={12}>
+                <small
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    color: "red",
+                  }}
+                >
+                  **Click On Image to Upload Logo.**
+                </small>
+              </Col>
               <Col md={12}>
                 <TextField
                   id="outlined-name"
@@ -707,7 +864,27 @@ export default function RestaurantList() {
                   </div>
                 ) : null}
               </Col>
-
+              <Col md={12}>
+                <TextField
+                  id="outlined-desc"
+                  label="Description"
+                  value={edit_formik.values.sub_description}
+                  name="sub_description"
+                  multiline
+                  rows={5}
+                  onChange={handleEditChange}
+                  margin="normal"
+                  variant="outlined"
+                />
+                {edit_formik.touched.sub_description &&
+                edit_formik.errors.sub_description ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">
+                      {edit_formik.errors.sub_description}
+                    </div>
+                  </div>
+                ) : null}
+              </Col>
               <Col md={12}>
                 <RichTextEditor
                   value={edit_formik.values.description}
